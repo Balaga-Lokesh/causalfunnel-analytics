@@ -25,9 +25,10 @@ A small full-stack analytics app: a drop-in JavaScript tracker records page view
 │       ├── db.ts             MongoDB connection
 │       ├── validation.ts     Zod schemas for incoming events
 │       ├── models/Event.ts   event schema + indexes
-│       └── routes/           events, sessions, pages (heatmap)
+│       ├── routes/           events, sessions, pages (heatmap)
+│       └── scripts/          seed script + measured demo-store layout
 ├── tracker/      tracker.js — the embeddable tracking script
-├── demo/         static demo store pages that load the tracker
+├── demo/         "Trailhead Supply Co.", a static demo store (home, product, checkout) that loads the tracker
 └── dashboard/    Next.js dashboard (Sessions + Heatmap views)
 ```
 
@@ -72,14 +73,29 @@ cp dashboard/.env.example dashboard/.env.local
 npm run dev
 ```
 
-- API + demo site: http://localhost:4000/demo/
+- API + demo store: http://localhost:4000/demo/
 - Dashboard: http://localhost:3000
+
+### Sample data (optional)
+
+```bash
+npm run seed                                  # 80 sample sessions over the last 14 days
+npm run seed -- --sessions 200 --days 30      # more data
+npm run seed -- --base-url https://<api-host> # when the demo store is hosted elsewhere
+npm run seed -- --clear                       # remove sample data only
+```
+
+The seed script simulates visitors moving through the demo store (home → product → checkout, with realistic drop-off) on desktop, tablet and phone. Click positions come from [`demo-layout.json`](backend/src/scripts/demo-layout.json): the clickable areas of each demo page measured in a real browser at 1280px, 820px and 390px, so seeded clicks land on the actual buttons in the heatmap.
+
+Sample sessions are always distinguishable from real traffic: their `session_id` starts with `seed-`, the dashboard tags them **Sample**, and re-running the script replaces only them, never real tracked data.
 
 ### Adding the tracker to any page
 
 ```html
-<script src="https://<api-host>/tracker.js" data-endpoint="https://<api-host>/api/events" defer></script>
+<script src="https://<api-host>/tracker.js" defer></script>
 ```
+
+Events go to `/api/events` on the same host as the script. Use `data-endpoint="…"` to send them elsewhere, or `data-debug` to log each event to the console.
 
 ## Assumptions & trade-offs
 

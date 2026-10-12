@@ -28,9 +28,17 @@ export function formatRelative(iso: string, now = Date.now()): string {
   return relativeFormatter.format(Math.round(seconds / 86400), 'day');
 }
 
+const SAMPLE_PREFIX = 'seed-';
+
+/** Sessions created by the seed script (sample data), not by real visitors. */
+export function isSampleSession(id: string): boolean {
+  return id.startsWith(SAMPLE_PREFIX);
+}
+
 /** First block of a UUID, enough to tell sessions apart at a glance. */
 export function shortId(id: string): string {
-  return id.length > 12 ? id.split('-')[0]! : id;
+  const bare = isSampleSession(id) ? id.slice(SAMPLE_PREFIX.length) : id;
+  return bare.length > 12 ? bare.split('-')[0]! : bare;
 }
 
 /** Path part of a URL for compact display ("/demo/product"). */

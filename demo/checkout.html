@@ -3,26 +3,107 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Demo Store — Checkout</title>
+    <title>Checkout — Trailhead Supply Co.</title>
     <link rel="stylesheet" href="/demo/styles.css" />
-    <script src="/tracker.js" data-endpoint="/api/events" defer></script>
+    <script src="/tracker.js" defer></script>
   </head>
   <body>
-    <header class="nav">
-      <a class="brand" href="/demo/">Demo Store</a>
-      <nav>
-        <a href="/demo/">Home</a>
-        <a href="/demo/product">Product</a>
-        <a href="/demo/checkout">Checkout</a>
-      </nav>
+    <div class="demo-banner">Demo store: this checkout is fake. Don't enter real details; nothing is submitted.</div>
+
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/demo/"><span class="brand-mark" aria-hidden="true"></span>Trailhead Supply Co.</a>
+        <nav class="site-nav" aria-label="Main">
+          <a class="nav-text" href="/demo/#products">Shop</a>
+          <a class="nav-text" href="/demo/product">Backpacks</a>
+          <a class="nav-text" href="/demo/#journal">Journal</a>
+          <a class="cart-link" href="/demo/checkout" aria-current="page">Cart <span class="cart-count">1</span></a>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <h1>Checkout</h1>
-      <p>Trail Backpack 30L — $89.00</p>
-      <button class="btn" type="button">Place order</button>
+    <main class="container" id="checkout">
+      <ol class="steps">
+        <li>Cart</li><li>›</li><li aria-current="step">Details</li><li>›</li><li>Done</li>
+      </ol>
 
-      <!-- TODO: order summary, fake form fields (no real data collected) -->
+      <form class="checkout-layout" id="checkout-form" autocomplete="off">
+        <div>
+          <section class="panel">
+            <h2>Contact &amp; shipping</h2>
+            <div class="field-row">
+              <label class="field">First name<input type="text" placeholder="Alex" /></label>
+              <label class="field">Last name<input type="text" placeholder="Rivera" /></label>
+            </div>
+            <label class="field">Email<input type="email" placeholder="alex@example.com" /></label>
+            <label class="field">Address<input type="text" placeholder="12 Summit Road" /></label>
+            <div class="field-row">
+              <label class="field">City<input type="text" placeholder="Boulder" /></label>
+              <label class="field">Postcode<input type="text" placeholder="80302" /></label>
+            </div>
+          </section>
+
+          <section class="panel" style="margin-top: 20px">
+            <h2>Delivery</h2>
+            <label class="ship-option"><span><input type="radio" name="ship" checked /> Standard (3–5 days)</span> <span>Free</span></label>
+            <label class="ship-option"><span><input type="radio" name="ship" /> Express (1–2 days)</span> <span>$12.00</span></label>
+          </section>
+        </div>
+
+        <aside class="panel">
+          <h2>Order summary</h2>
+          <div class="summary-item">
+            <div class="art art-forest">
+              <svg viewBox="0 0 60 60" fill="none" aria-hidden="true"><rect x="15" y="12" width="30" height="40" rx="9" fill="#fff" fill-opacity=".9" /></svg>
+            </div>
+            <div>
+              <strong>Trail Backpack 30L</strong>
+              <div style="color: var(--muted); font-size: 14px">Forest · M · Qty 1</div>
+            </div>
+          </div>
+
+          <div class="totals">
+            <div><span>Subtotal</span><span>$89.00</span></div>
+            <div><span>Shipping</span><span>Free</span></div>
+            <div class="grand"><span>Total</span><span>$89.00</span></div>
+          </div>
+
+          <div class="promo">
+            <input type="text" placeholder="Promo code" aria-label="Promo code" />
+            <button class="btn btn-secondary" type="button" id="apply-promo">Apply</button>
+          </div>
+
+          <button class="btn btn-block" type="submit">Place order</button>
+          <p class="notice">Demo checkout: no payment is taken and no data leaves this page.</p>
+          <a href="/demo/product" style="display:block;margin-top:12px;font-size:14px">← Continue shopping</a>
+        </aside>
+      </form>
     </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>© Trailhead Supply Co. (fictional demo store)</span>
+        <nav aria-label="Footer">
+          <a href="/demo/#features">About</a>
+          <a href="/demo/checkout">Shipping</a>
+          <a href="/demo/#journal">Contact</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      // Demo only: the form never submits anywhere.
+      document.getElementById('apply-promo').addEventListener('click', function (e) {
+        e.target.textContent = 'Invalid code';
+      });
+      document.getElementById('checkout-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        document.getElementById('checkout').innerHTML =
+          '<div class="panel confirmation" style="margin:40px 0">' +
+          '<h1>Order placed 🎉</h1>' +
+          '<p>Thanks for testing the demo store. No payment was taken.</p>' +
+          '<a class="btn" href="/demo/">Back to the store</a></div>';
+      });
+    </script>
   </body>
 </html>

@@ -3,26 +3,131 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Demo Store — Product</title>
+    <title>Trail Backpack 30L — Trailhead Supply Co.</title>
     <link rel="stylesheet" href="/demo/styles.css" />
-    <script src="/tracker.js" data-endpoint="/api/events" defer></script>
+    <script src="/tracker.js" defer></script>
   </head>
   <body>
-    <header class="nav">
-      <a class="brand" href="/demo/">Demo Store</a>
-      <nav>
-        <a href="/demo/">Home</a>
-        <a href="/demo/product">Product</a>
-        <a href="/demo/checkout">Checkout</a>
-      </nav>
+    <div class="demo-banner">Demo store for the analytics assignment. Every page view and click is tracked.</div>
+
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/demo/"><span class="brand-mark" aria-hidden="true"></span>Trailhead Supply Co.</a>
+        <nav class="site-nav" aria-label="Main">
+          <a class="nav-text" href="/demo/#products">Shop</a>
+          <a class="nav-text" href="/demo/product" aria-current="page">Backpacks</a>
+          <a class="nav-text" href="/demo/#journal">Journal</a>
+          <a class="cart-link" href="/demo/checkout">Cart <span class="cart-count">1</span></a>
+        </nav>
+      </div>
     </header>
 
-    <main>
-      <h1>Trail Backpack 30L</h1>
-      <p class="price">$89.00</p>
-      <a class="btn" href="/demo/checkout">Add to cart</a>
+    <main class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/demo/">Home</a> / <a href="/demo/#products">Packs</a> / Trail Backpack 30L
+      </nav>
 
-      <!-- TODO: image, size picker, description, reviews -->
+      <div class="product-layout">
+        <div>
+          <div class="gallery-main art art-forest" id="gallery-main" role="img" aria-label="Trail Backpack 30L">
+            <svg viewBox="0 0 60 60" fill="none" aria-hidden="true"><rect x="15" y="12" width="30" height="40" rx="9" fill="#fff" fill-opacity=".9" /><rect x="21" y="30" width="18" height="12" rx="3" fill="#166534" fill-opacity=".35" /><path d="M24 12V8h12v4" stroke="#fff" stroke-width="3" /></svg>
+          </div>
+          <div class="thumbs">
+            <button class="thumb art art-forest" type="button" aria-label="Forest" aria-pressed="true" data-art="art-forest"></button>
+            <button class="thumb art art-sunset" type="button" aria-label="Ember" aria-pressed="false" data-art="art-sunset"></button>
+            <button class="thumb art art-sky" type="button" aria-label="Glacier" aria-pressed="false" data-art="art-sky"></button>
+            <button class="thumb art art-stone" type="button" aria-label="Granite" aria-pressed="false" data-art="art-stone"></button>
+          </div>
+        </div>
+
+        <div class="product-info">
+          <h1>Trail Backpack 30L</h1>
+          <div class="rating">★★★★★ 4.8 <a href="#reviews">128 reviews</a></div>
+          <div class="price-lg">$89.00</div>
+          <p>A light, weatherproof day pack with a ventilated back panel, hip-belt pockets and a hydration sleeve.</p>
+
+          <div class="option-label">Color: <span id="color-name">Forest</span></div>
+          <div class="swatches">
+            <button class="swatch" type="button" style="background:#166534" aria-label="Forest" aria-pressed="true"></button>
+            <button class="swatch" type="button" style="background:#c2410c" aria-label="Ember" aria-pressed="false"></button>
+            <button class="swatch" type="button" style="background:#1d4ed8" aria-label="Glacier" aria-pressed="false"></button>
+            <button class="swatch" type="button" style="background:#57534e" aria-label="Granite" aria-pressed="false"></button>
+          </div>
+
+          <div class="option-label">Size</div>
+          <div class="sizes">
+            <button class="size" type="button" aria-pressed="false">S</button>
+            <button class="size" type="button" aria-pressed="true">M</button>
+            <button class="size" type="button" aria-pressed="false">L</button>
+          </div>
+
+          <div class="buy-row">
+            <div class="qty">
+              <button type="button" id="qty-minus" aria-label="Decrease quantity">−</button>
+              <output id="qty">1</output>
+              <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
+            </div>
+            <a class="btn" id="add-to-cart" href="/demo/checkout">Add to cart</a>
+          </div>
+          <button class="btn btn-secondary btn-block wishlist" type="button">♡ Save to wishlist</button>
+
+          <div class="details">
+            <details>
+              <summary>Features</summary>
+              <p>Recycled ripstop shell, YKK zips, padded laptop sleeve, two stretch side pockets.</p>
+            </details>
+            <details>
+              <summary>Size &amp; fit</summary>
+              <p>M fits torso lengths 43–48 cm. Weighs 820 g.</p>
+            </details>
+            <details>
+              <summary>Shipping &amp; returns</summary>
+              <p>Ships in 1–2 days. Free returns within 30 days.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <section class="section" id="reviews">
+        <div class="section-head"><h2>Reviews</h2><a href="#reviews">Write a review</a></div>
+        <div class="reviews">
+          <div class="review"><strong>★★★★★ Perfect day pack</strong><p>Comfortable on a 20 km hike, and the hip pockets fit my phone.</p></div>
+          <div class="review"><strong>★★★★★ Survived a downpour</strong><p>Everything inside stayed dry. Love the color.</p></div>
+          <div class="review"><strong>★★★★☆ Great, runs small</strong><p>Size up if you're between sizes. Otherwise excellent.</p></div>
+        </div>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span>© Trailhead Supply Co. (fictional demo store)</span>
+        <nav aria-label="Footer">
+          <a href="/demo/#features">About</a>
+          <a href="/demo/checkout">Shipping</a>
+          <a href="/demo/#journal">Contact</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      // Toggle groups: one pressed button per group.
+      function group(selector, onSelect) {
+        var buttons = document.querySelectorAll(selector);
+        buttons.forEach(function (b) {
+          b.addEventListener('click', function () {
+            buttons.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+            if (onSelect) onSelect(b);
+          });
+        });
+      }
+      var main = document.getElementById('gallery-main');
+      group('.thumb', function (b) { main.className = 'gallery-main art ' + b.dataset.art; });
+      group('.swatch', function (b) { document.getElementById('color-name').textContent = b.getAttribute('aria-label'); });
+      group('.size');
+
+      var qty = document.getElementById('qty');
+      document.getElementById('qty-minus').addEventListener('click', function () { qty.value = Math.max(1, Number(qty.value) - 1); });
+      document.getElementById('qty-plus').addEventListener('click', function () { qty.value = Math.min(9, Number(qty.value) + 1); });
+    </script>
   </body>
 </html>

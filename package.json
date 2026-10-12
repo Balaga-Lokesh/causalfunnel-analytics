@@ -12,7 +12,8 @@
     "dev:api": "npm run dev -w backend",
     "dev:web": "npm run dev -w dashboard",
     "build": "npm run build -w backend && npm run build -w dashboard",
-    "typecheck": "npm run typecheck -w backend && npm run typecheck -w dashboard"
+    "typecheck": "npm run typecheck -w backend && npm run typecheck -w dashboard",
+    "seed": "npm run seed -w backend --"
   },
   "devDependencies": {
     "concurrently": "^9.2.0"

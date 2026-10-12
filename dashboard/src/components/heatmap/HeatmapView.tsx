@@ -24,7 +24,8 @@ export function HeatmapView({ pages, initialPageUrl }: { pages: PageSummary[]; i
   const router = useRouter();
   const selectId = useId();
   const [pageUrl, setPageUrl] = useState(initialPageUrl);
-  const [device, setDevice] = useState<DeviceFilter>('all');
+  // null = automatic: the device class with the most clicks (layouts differ too much to mix by default).
+  const [device, setDevice] = useState<DeviceFilter | null>(null);
   const [mode, setMode] = useState<RenderMode>('dots');
   const [showPage, setShowPage] = useState(true);
   const [state, setState] = useState<LoadState>({ status: 'loading' });
@@ -41,10 +42,7 @@ export function HeatmapView({ pages, initialPageUrl }: { pages: PageSummary[]; i
     };
   }, [pageUrl, reloadKey]);
 
-  const clicks = state.status === 'ready' ? state.data.clicks : [];
-  const filtered = useMemo(() => filterByDevice(clicks, device), [clicks, device]);
-  const layout = useMemo(() => computeLayout(filtered), [filtered]);
-  const targets = useMemo(() => topTargets(filtered), [filtered]);
+  const clicks = useMemo(() => (state.status === 'ready' ? state.data.clicks : []), [state]);
 
   const deviceCounts = useMemo(() => {
     const counts: Record<DeviceFilter, number> = { all: clicks.length, desktop: 0, tablet: 0, mobile: 0 };
@@ -55,8 +53,20 @@ export function HeatmapView({ pages, initialPageUrl }: { pages: PageSummary[]; i
     return counts;
   }, [clicks]);
 
+  const dominantDevice = (['desktop', 'tablet', 'mobile'] as const).reduce((best, d) =>
+    deviceCounts[d] > deviceCounts[best] ? d : best,
+  );
+  const activeDevice: DeviceFilter = device ?? (deviceCounts[dominantDevice] > 0 ? dominantDevice : 'all');
+  const mixesLayouts =
+    activeDevice === 'all' && (['desktop', 'tablet', 'mobile'] as const).filter((d) => deviceCounts[d] > 0).length > 1;
+
+  const filtered = useMemo(() => filterByDevice(clicks, activeDevice), [clicks, activeDevice]);
+  const layout = useMemo(() => computeLayout(filtered), [filtered]);
+  const targets = useMemo(() => topTargets(filtered), [filtered]);
+
   function selectPage(url: string) {
     setPageUrl(url);
+    setDevice(null);
     // Keep the selection in the URL so the view can be shared or bookmarked.
     router.replace(`/heatmap?page=${encodeURIComponent(url)}`, { scroll: false });
   }
@@ -88,7 +98,7 @@ export function HeatmapView({ pages, initialPageUrl }: { pages: PageSummary[]; i
 
           <SegmentedControl
             legend="Device"
-            value={device}
+            value={activeDevice}
             onChange={setDevice}
             options={DEVICE_OPTIONS.map((o) => ({ ...o, label: `${o.label} (${deviceCounts[o.value]})` }))}
           />
@@ -137,6 +147,12 @@ export function HeatmapView({ pages, initialPageUrl }: { pages: PageSummary[]; i
                     Showing <span className="font-semibold text-zinc-900">{filtered.length}</span> of{' '}
                     {state.data.total} clicks
                     {state.data.truncated && ' (most recent only)'}
+                    {mixesLayouts && (
+                      <span className="mt-1 block text-xs text-amber-700">
+                        Mixing devices: phone and tablet clicks are approximated onto the {layout.width}px layout. Pick a
+                        device for exact positions.
+                      </span>
+                    )}
                   </>
                 )}
               </p>
@@ -149,7 +165,7 @@ export function HeatmapView({ pages, initialPageUrl }: { pages: PageSummary[]; i
               />
               {state.status === 'ready' && filtered.length === 0 && (
                 <p className="mt-3 text-center text-sm text-zinc-500">
-                  No clicks recorded {device === 'all' ? 'on this page' : `from ${device} devices`} yet.
+                  No clicks recorded {activeDevice === 'all' ? 'on this page' : `from ${activeDevice} devices`} yet.
                 </p>
               )}
             </>

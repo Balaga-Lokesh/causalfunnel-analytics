@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { LocalTime } from '@/components/LocalTime';
 import { RefreshButton } from '@/components/RefreshButton';
 import { getSessions } from '@/lib/api';
-import { describeUserAgent, formatDuration, pathOf, plural, shortId } from '@/lib/format';
+import { SampleBadge } from '@/components/SampleBadge';
+import { describeUserAgent, formatDuration, isSampleSession, pathOf, plural, shortId } from '@/lib/format';
 
 const PAGE_SIZE = 25;
 
@@ -55,13 +56,16 @@ export default async function SessionsPage({
                 return (
                   <tr key={s.session_id} className="hover:bg-zinc-50">
                     <td className="px-4 py-3">
-                      <Link
-                        href={href}
-                        className="font-mono font-medium text-indigo-600 hover:underline"
-                        title={s.session_id}
-                      >
-                        {shortId(s.session_id)}
-                      </Link>
+                      <span className="flex items-center gap-2">
+                        <Link
+                          href={href}
+                          className="font-mono font-medium text-indigo-600 hover:underline"
+                          title={s.session_id}
+                        >
+                          {shortId(s.session_id)}
+                        </Link>
+                        {isSampleSession(s.session_id) && <SampleBadge />}
+                      </span>
                     </td>
                     <td data-label="Last active" className="px-4 py-3 whitespace-nowrap text-zinc-600">
                       <LocalTime iso={s.last_seen} mode="relative" />
@@ -70,7 +74,7 @@ export default async function SessionsPage({
                       <span>
                         <span className="font-semibold text-zinc-900">{s.total_events}</span>
                         <span className="ml-2 text-xs text-zinc-500">
-                          {s.page_views} views · {s.clicks} clicks
+                          {plural(s.page_views, 'view')} · {plural(s.clicks, 'click')}
                         </span>
                       </span>
                     </td>

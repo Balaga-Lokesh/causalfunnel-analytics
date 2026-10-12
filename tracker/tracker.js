@@ -132,8 +132,9 @@
       desc += '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.');
     }
     // Only label buttons/links: never read values typed into form fields.
+    // Icon-only controls (swatches, image links) fall back to their aria-label.
     if (/^(a|button|label)$/.test(el.tagName.toLowerCase()) || el.getAttribute('role') === 'button') {
-      var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      var text = (el.textContent || '').replace(/\s+/g, ' ').trim() || el.getAttribute('aria-label') || '';
       if (text) desc += ' "' + text.slice(0, 40) + (text.length > 40 ? '…' : '') + '"';
     }
     return desc.slice(0, 200);

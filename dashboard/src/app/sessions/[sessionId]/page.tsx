@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { EventIcon } from '@/components/EventIcon';
 import { LocalTime } from '@/components/LocalTime';
+import { SampleBadge } from '@/components/SampleBadge';
 import { ApiError, getSessionEvents } from '@/lib/api';
-import { describeUserAgent, formatDuration, formatOffset, hostOf, pathOf, shortId } from '@/lib/format';
+import { describeUserAgent, formatDuration, formatOffset, hostOf, isSampleSession, pathOf, shortId } from '@/lib/format';
 import type { TrackedEvent } from '@/lib/types';
 
 interface PageVisit {
@@ -61,7 +62,9 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
       </Link>
 
       <header className="mt-3">
-        <h1 className="text-2xl font-semibold tracking-tight">User journey</h1>
+        <h1 className="flex items-center gap-3 text-2xl font-semibold tracking-tight">
+          User journey {isSampleSession(session.session_id) && <SampleBadge />}
+        </h1>
         <p className="mt-1 font-mono text-sm break-all text-zinc-500">{session.session_id}</p>
       </header>
 
