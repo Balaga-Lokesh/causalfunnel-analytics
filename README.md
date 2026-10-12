@@ -177,6 +177,22 @@ Sample sessions are always distinguishable from real traffic: their `session_id`
 
 Events go to `/api/events` on the host that serves the script. Add `data-endpoint="…"` to send them elsewhere, or `data-debug` to log each event to the console.
 
+## Deployment
+
+| Part | Host | Config |
+|---|---|---|
+| API + tracker + demo store | [Render](https://render.com) (free web service) | [`render.yaml`](render.yaml) blueprint |
+| Dashboard | [Vercel](https://vercel.com) | Root directory `dashboard` |
+| Database | MongoDB Atlas (M0 free, AWS Mumbai) | |
+
+1. **Atlas:** create a database user with `readWrite` on `causalfunnel`, and allow network access from `0.0.0.0/0` (Render has no fixed outbound IP; the connection still requires the user's credentials).
+2. **Render:** New → Blueprint → this repo. Set `MONGODB_URI`; leave `DASHBOARD_ORIGINS` for step 4.
+3. **Vercel:** import the repo, set Root Directory to `dashboard` and `NEXT_PUBLIC_API_URL` to the Render URL.
+4. **Render:** set `DASHBOARD_ORIGINS` to the Vercel URL (the heatmap fetches from the browser, so it needs CORS).
+5. Optional: `npm run seed -- --base-url https://<render-app>.onrender.com` to load sample data that points at the hosted demo store.
+
+Render's free tier sleeps after 15 minutes without traffic, so the first request after a pause can take up to a minute while the API wakes up.
+
 ## Assumptions & trade-offs
 
 ### Tracking
