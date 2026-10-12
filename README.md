@@ -35,12 +35,31 @@ A small full-stack analytics app: a drop-in JavaScript tracker records page view
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/events` | Receive and store one event or a batch (`{ events: [...] }`) |
-| `GET` | `/api/sessions` | Sessions with event counts |
-| `GET` | `/api/sessions/:sessionId/events` | All events of a session, in order |
-| `GET` | `/api/pages` | Tracked page URLs (for the heatmap selector) |
-| `GET` | `/api/pages/clicks?url=<page_url>` | Click positions for a page (heatmap) |
+| `POST` | `/api/events` | Receive and store one event or a batch (`{ events: [...] }`). Accepts JSON or `text/plain` (sendBeacon). Returns `202 { accepted }` |
+| `GET` | `/api/sessions?limit=50&offset=0` | Sessions with event counts, most recent first: totals, page views, clicks, unique pages, duration, entry/exit page |
+| `GET` | `/api/sessions/:sessionId/events` | All events of a session in time order (the user journey); `404` if unknown |
+| `GET` | `/api/pages` | Tracked pages with view/click/session counts (feeds the heatmap selector) |
+| `GET` | `/api/pages/clicks?url=<page_url>&limit=5000` | Click positions for a page with page/viewport size; raw URLs are normalized like on ingest |
 | `GET` | `/api/health` | Health check |
+
+Invalid input returns `400` with Zod issue details.
+
+### Event shape
+
+```jsonc
+{
+  "session_id": "b0fc56d6-…",          // localStorage, rotates after 30 min idle
+  "event_type": "click",               // "page_view" | "click"
+  "page_url": "https://shop.example/product?id=1",
+  "timestamp": "2026-10-12T14:20:15.035Z",
+  "x": 240, "y": 264,                  // clicks only; document coordinates (pageX/pageY)
+  "viewport_width": 1280, "viewport_height": 720,
+  "page_width": 1280, "page_height": 2400,
+  "target": "a.btn \"Add to cart\""    // short description of the clicked element
+}
+```
+
+The server stores `page_url` normalized (origin + path, no query/hash, `/a/`, `/a.html` and `/a/index.html` → `/a`) and keeps the original in `full_url`.
 
 ## Setup
 

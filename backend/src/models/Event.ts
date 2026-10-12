@@ -46,10 +46,10 @@ const eventSchema = new Schema(
   },
 );
 
-// User journey: all events of a session in order.
-eventSchema.index({ session_id: 1, timestamp: 1 });
-// Heatmap: all clicks for a page.
-eventSchema.index({ page_url: 1, event_type: 1 });
+// User journey: all events of a session in order (_id breaks timestamp ties).
+eventSchema.index({ session_id: 1, timestamp: 1, _id: 1 });
+// Heatmap: clicks for a page, newest first. Also serves page_url-only lookups.
+eventSchema.index({ page_url: 1, event_type: 1, timestamp: -1 });
 // Session list sorted by recency.
 eventSchema.index({ timestamp: -1 });
 
