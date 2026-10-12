@@ -7,3 +7,63 @@
 body {
   @apply bg-zinc-50 text-zinc-900 antialiased;
 }
+
+/*
+ * Responsive data table: sticky header on wide containers, stacked "cards"
+ * with injected labels when the table's own container is narrow.
+ */
+.data-table-wrapper {
+  container-type: inline-size;
+  overflow: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table thead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+}
+
+@container (width < 720px) {
+  .data-table,
+  .data-table tbody,
+  .data-table tr,
+  .data-table th,
+  .data-table td {
+    display: block;
+  }
+
+  /* Hide column headers from layout and screen readers; labels move into each cell. */
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody tr {
+    border-block-end: 1px solid var(--color-zinc-200);
+    padding-block: 0.5rem;
+  }
+
+  .data-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: none;
+    border: 0;
+    padding-block: 0.25rem;
+    text-align: end;
+  }
+
+  .data-table tbody td[data-label]::before {
+    content: attr(data-label);
+    /* Accessible-name form where supported: screen readers read the label without the visual styling. */
+    content: attr(data-label) / attr(data-label);
+    flex-shrink: 0;
+    font-weight: 500;
+    color: var(--color-zinc-500);
+  }
+}
