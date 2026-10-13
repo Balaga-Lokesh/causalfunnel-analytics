@@ -2,7 +2,11 @@
 
 A small full-stack analytics app. A drop-in JavaScript tracker records page views and clicks, a Node.js API stores them in MongoDB, and a Next.js dashboard shows sessions, user journeys and click heatmaps.
 
-> **Live demo store:** _TBD_ · **Dashboard:** _TBD_ · **Video walkthrough:** _TBD_
+> **Dashboard:** https://causalfunnel-analytics-delta.vercel.app
+> **Demo store (tracked):** https://causalfunnel-analytics-api.onrender.com/demo/
+> **API:** https://causalfunnel-analytics-api.onrender.com/api/health · **Video walkthrough:** _TBD_
+>
+> The API runs on Render's free tier and sleeps when idle: the first request after a pause can take up to a minute. The dashboard is pre-filled with clearly labelled **Sample** sessions; click around the demo store and your own session appears alongside them.
 
 ## Features
 

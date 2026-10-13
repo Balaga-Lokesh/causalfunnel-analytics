@@ -38,7 +38,8 @@ export function isSampleSession(id: string): boolean {
 /** First block of a UUID, enough to tell sessions apart at a glance. */
 export function shortId(id: string): string {
   const bare = isSampleSession(id) ? id.slice(SAMPLE_PREFIX.length) : id;
-  return bare.length > 12 ? bare.split('-')[0]! : bare;
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(bare)) return bare.slice(0, 8);
+  return bare.length > 12 ? `${bare.slice(0, 12)}…` : bare;
 }
 
 /** Path part of a URL for compact display ("/demo/product"). */
