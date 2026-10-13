@@ -93,6 +93,9 @@ export function HeatmapCanvas({ layout, pageUrl, mode, showPage, label }: Props)
   useLayoutEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    // Measure right away: ResizeObserver only reports on rendered frames, which
+    // never come while the tab is in the background.
+    setContainerWidth(el.getBoundingClientRect().width);
     const observer = new ResizeObserver(([entry]) => setContainerWidth(entry!.contentRect.width));
     observer.observe(el);
     return () => observer.disconnect();
